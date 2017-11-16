@@ -1,0 +1,14 @@
+I'll write up a more detailed explanation of the code later, and clean up my commenting. For now though, I think the only parameter you'll need to adjust is the t_dead field in the alan1.h file.
+
+In order for this code to compile you'll need to install the Button library. 
+
+1) You can download the Button library as a zip folder from this link: 
+
+2) You need to find where Arduino is installed on your computer and move the Button zip folder to the Libraries directory w/ your Arduino folder.
+
+
+3) Open up an Arduino window and go to Sketch/Add .ZIP Library. Find your Button zip and select.
+
+4) That should be all you need. If you get compile errors then try erasing the line at the beginning of alan1.h that reads "#include <Button.h>" then go to Sketch/Include Library and select Button.h from the dropdown menu, it should appear as an option at this point.
+
+5) You'll also need to install the LiquidCrystal_I2C library. That should be included in the link you sent me from the LCD company.
