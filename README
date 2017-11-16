@@ -2,10 +2,9 @@ I'll write up a more detailed explanation of the code later, and clean up my com
 
 In order for this code to compile you'll need to install the Button library. 
 
-1) You can download the Button library as a zip folder from this link: 
+1) You can download the Button library as a zip folder from this link: https://github.com/tigoe/Button
 
 2) You need to find where Arduino is installed on your computer and move the Button zip folder to the Libraries directory w/ your Arduino folder.
-
 
 3) Open up an Arduino window and go to Sketch/Add .ZIP Library. Find your Button zip and select.
 
