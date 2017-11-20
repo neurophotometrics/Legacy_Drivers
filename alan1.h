@@ -137,7 +137,8 @@ void updateFPS(){
 
   int oldFPS = intensity[FPS];
   //update FPS value
-  intensity[FPS] = map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS);
+ // intensity[FPS] = map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS);
+  intensity[FPS] = abs(map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS)-maxIntensity);
   //update LCD
   if(oldFPS != intensity[FPS]){
     updateLCD(FPS);
