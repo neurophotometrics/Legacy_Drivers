@@ -53,11 +53,11 @@
 LiquidCrystal_I2C lcd(0x3F,20,4);
 
 //led output pins
-int ledWritePins[] = {7,6,12};
-int potPins[] = {A0,A1,A2,A3};
-Button startButton = Button(8,PULLUP);
-Button modeButton = Button(9,PULLUP);
-int cameraPin = 3;
+int ledWritePins[] = {10,11,9};
+int potPins[] = {A1,A0,A2,A3};
+Button startButton = Button(3,PULLUP);
+Button modeButton = Button(4,PULLUP);
+int cameraPin = 7;
 
 //state variables
 int intensity[] = {-1,-1,-1,-1};
@@ -67,11 +67,11 @@ boolean start = false;
 unsigned long temp;
 
 //technical parameters
-int minFPS = 5, maxFPS = 38, maxIntensity = 100, potMin = 700, potMax = 852;
+int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 700, potMax = 852;
 
 //wave parameters
 int t_exposure;			//CALCULATED AS 1/FPS - t_dead
-int t_dead = 1;			//CHANGE THIS VALUE
+int t_dead = 1;			
 unsigned long stop_time;
 
 /*
@@ -89,8 +89,6 @@ void init_LED(int led1,int led2, int led3);
 void shutdown_LED();
 void camera_write_trig();
 void camera_write_const();
-void cameraCheck();
-void ledTest();
 
 /*
  * Begin function definitions.
@@ -137,8 +135,7 @@ void updateFPS(){
 
   int oldFPS = intensity[FPS];
   //update FPS value
- // intensity[FPS] = map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS);
-  intensity[FPS] = abs(map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS)-maxIntensity);
+  intensity[FPS] = abs(map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS)-(minFPS+maxFPS));
   //update LCD
   if(oldFPS != intensity[FPS]){
     updateLCD(FPS);
@@ -154,7 +151,6 @@ void updateLED(){
     
     //update stored led intensity
     temp = analogRead(potPins[led]);
-    if(led==LED560){Serial.println(temp);}
     temp = max(temp,potMin);
     temp = min(temp,potMax);
     intensity[led] = abs(map(temp, potMin, potMax, 0, maxIntensity)-maxIntensity);
@@ -169,7 +165,6 @@ void updateLED(){
 void modeCheck(){
   if(modeButton.uniquePress()){
       mode = !mode;
-      Serial.println("Mode");
       lcd.setCursor(16,0);
       if(mode){
         lcd.print("TRGR");
@@ -184,7 +179,6 @@ void modeCheck(){
 void startCheck(){
     if(startButton.uniquePress()){
       start = !start;
-      Serial.println("Start");
     }
 }
 
@@ -238,22 +232,5 @@ void camera_write_const(){
   while(millis() < stop_time){}
   digitalWrite(cameraPin,LOW);
 }
-
-void cameraCheck(){
-  //dead time
-  delay(t_dead);
-
-  //take picture
-  //stop_time = millis() + t_exposure;
-  digitalWrite(cameraPin,HIGH);
-  delay(t_exposure);
-  digitalWrite(cameraPin,LOW);
-  }
-
-
-void ledTest(){
-    digitalWrite(ledWritePins[LED470],HIGH);
-}
-
 
 #endif

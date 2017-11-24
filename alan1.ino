@@ -33,10 +33,6 @@ void loop() {
   modeCheck();
   startCheck();
 
- // digitalWrite(cameraPin,HIGH);
-//  cameraCheck();
-//  ledTest();
-
   //start capturing data if startButton is pressed
   if(start){
     lcd.setCursor(17,3);
@@ -51,6 +47,7 @@ void loop() {
       while(start){
         camera_write_trig();
         startCheck();
+        updateLED();
       }
     }
 
@@ -64,6 +61,7 @@ void loop() {
       while(start){
         camera_write_const();
         startCheck();
+        updateLED();
       }
     }
     
@@ -74,6 +72,7 @@ void loop() {
   }
   
 }
+
 
 
 
