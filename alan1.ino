@@ -47,7 +47,6 @@ void loop() {
       while(start){
         camera_write_trig();
         startCheck();
-        updateLED();
       }
     }
 
@@ -61,7 +60,6 @@ void loop() {
       while(start){
         camera_write_const();
         startCheck();
-        updateLED();
       }
     }
     
