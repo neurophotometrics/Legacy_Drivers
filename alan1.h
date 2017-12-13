@@ -67,7 +67,8 @@ boolean start = false;
 unsigned long temp;
 
 //technical parameters
-int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 700, potMax = 852;
+//old potmin = 700, potMax = 852
+int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;
 
 //wave parameters
 int t_exposure;			//CALCULATED AS 1/FPS - t_dead
@@ -151,9 +152,10 @@ void updateLED(){
     
     //update stored led intensity
     temp = analogRead(potPins[led]);
-    temp = max(temp,potMin);
-    temp = min(temp,potMax);
-    intensity[led] = abs(map(temp, potMin, potMax, 0, maxIntensity)-maxIntensity);
+    temp = min(temp,potMin);
+    temp = max(temp,potMax);
+    intensity[led] = map(temp,potMin,potMax,0,maxIntensity);
+    //intensity[led] = abs(map(temp, potMin, potMax, 0, maxIntensity)-maxIntensity);
     if(oldLed != intensity[led]){
       //update LCD
       updateLCD(led);
@@ -177,10 +179,24 @@ void modeCheck(){
 
 //check if experiment initated
 void startCheck(){
+    if(startButton.isPressed()){
+      start = true;
+      Serial.println("START");
+    }
+    else{
+      start = false;
+      Serial.println("OFF");
+    }
+}
+
+/*
+ * old startCheck code for button
+  void startCheck(){
     if(startButton.uniquePress()){
       start = !start;
     }
 }
+ */
 
 //initialize LEDs for trigger mode
 void init_LED(int led1,int led2, int led3){
@@ -209,9 +225,9 @@ void camera_write_trig(){
 
   //take picture
   stop_time = millis() + t_exposure;
-  digitalWrite(cameraPin,HIGH);
-  while(millis() < stop_time){}
   digitalWrite(cameraPin,LOW);
+  while(millis() < stop_time){}
+  digitalWrite(cameraPin,HIGH);
 
   //switch LED states
   for(int led=0;led<3;led++){
@@ -228,9 +244,9 @@ void camera_write_const(){
 
   //take picture
   stop_time = millis() + t_exposure;
-  digitalWrite(cameraPin,HIGH);
-  while(millis() < stop_time){}
   digitalWrite(cameraPin,LOW);
+  while(millis() < stop_time){}
+  digitalWrite(cameraPin,HIGH);
 }
 
 #endif

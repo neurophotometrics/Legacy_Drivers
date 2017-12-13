@@ -27,11 +27,14 @@ void setup() {
 
 void loop() {
 
-  //check inputs -- can have these checked while camera is capturing data or only before
+  //check inputs
   updateFPS();    
   updateLED();
   modeCheck();
   startCheck();
+
+  //write camera high
+  digitalWrite(cameraPin,HIGH);
 
   //start capturing data if startButton is pressed
   if(start){
