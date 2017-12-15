@@ -23,7 +23,7 @@ void setup() {
   
   init_lcd();
 
-  Serial.begin(9600); //potentially can change data exchange rate
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -45,7 +45,7 @@ void loop() {
     if(mode==TRIGGER_MODE){
       
       //initialize LED states
-      init_LED(HIGH,LOW,HIGH);
+      init_LED(LOW,HIGH,HIGH);  //CHANGE LED TRIGGERING: 410, 470, 560
 
       //capture data until start button pressed
       while(start){

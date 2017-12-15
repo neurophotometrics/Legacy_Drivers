@@ -178,19 +178,11 @@ void modeCheck(){
     }
 }
 
-//check if experiment initated
+//check if experiment initiated
 void startCheck(){
-  start = startButton.isPressed();
+  start = !startButton.isPressed();
 }
 
-/*
- * old startCheck code for button
-  void startCheck(){
-    if(startButton.uniquePress()){
-      start = !start;
-    }
-}
- */
 
 //initialize LEDs for trigger mode
 void init_LED(int led1,int led2, int led3){
