@@ -1,4 +1,3 @@
-
 #include "alan1.h"
 
 /*
@@ -45,7 +44,7 @@ void loop() {
     if(mode==TRIGGER_MODE){
       
       //initialize LED states
-      init_LED(HIGH,LOW,HIGH);
+      init_LED(LOW,HIGH,HIGH);
 
       //capture data until start button pressed
       while(start){
