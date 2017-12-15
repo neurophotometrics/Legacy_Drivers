@@ -135,6 +135,7 @@ void updateLCD(int val){
 void updateFPS(){
 
   int oldFPS = intensity[FPS];
+
   //update FPS value
   intensity[FPS] = abs(map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS)-(minFPS+maxFPS));
   //update LCD
@@ -179,14 +180,7 @@ void modeCheck(){
 
 //check if experiment initated
 void startCheck(){
-    if(startButton.isPressed()){
-      start = true;
-      Serial.println("START");
-    }
-    else{
-      start = false;
-      Serial.println("OFF");
-    }
+  start = startButton.isPressed();
 }
 
 /*
@@ -218,16 +212,16 @@ void shutdown_LED(){
 
 //write instruction to camera
 void camera_write_trig(){
-
   //dead time
-  stop_time = millis() + t_dead;
-  while(millis() < stop_time){}
-
+  //stop_time = millis() + t_dead;
+//  while(millis() < stop_time){}
+  delay(t_dead);
   //take picture
-  stop_time = millis() + t_exposure;
-  digitalWrite(cameraPin,LOW);
-  while(millis() < stop_time){}
-  digitalWrite(cameraPin,HIGH);
+//  stop_time = millis() + t_exposure;
+  digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(t_exposure);
+//  while(millis() < stop_time){}
+  digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
 
   //switch LED states
   for(int led=0;led<3;led++){
@@ -238,15 +232,12 @@ void camera_write_trig(){
 
 void camera_write_const(){
   //dead time
-  stop_time = millis() + t_dead;
-  while(millis() < stop_time){}
-
+  delay(t_dead);
 
   //take picture
-  stop_time = millis() + t_exposure;
-  digitalWrite(cameraPin,LOW);
-  while(millis() < stop_time){}
-  digitalWrite(cameraPin,HIGH);
+  digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(t_exposure);
+  digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
 }
 
 #endif
