@@ -1,4 +1,4 @@
-Arduino Code for Neurophotometrics Fiber Photometry System. Enables user interface and operation of device.
+Arduino Code for Neurophotometrics Fiber Photometry System. Enables user interface and operation of device. More information about Neurophotometrics at https://www.neurophotometrics.com/.
 
 alan1.h, alan1.ino - Arduino code and associated header file
 
