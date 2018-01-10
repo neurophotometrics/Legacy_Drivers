@@ -1,43 +1,9 @@
--- Wiring Instructions --
+Arduino Code for Neurophotometrics Fiber Photometry System. Enables user interface and operation of device.
 
-With the current board set up, wires need to be plugged directly into the Arduino. This isn't as secure as soldering to header pins and inserting the pins into the Arduino, so there is a greater chance of wires falling out. The following guide explains what wires should be connected to what pins in the Arduino in the even that any need to be replaced.
+alan1.h, alan1.ino - Arduino code and associated header file
 
+Button.zip - open source library for interfacing Arduino with buttons
 
-1) 5V - there is a red wire soldered to the power rail (vertical rail, red, marked with a '+') on the right side of the breadboard that should be plugged into the 5V port on the Arduino.
+LiquidCrystal_I2C2004V2.zip - open source library for interfacing Arduino with LCD through I2C pins
 
-2) GND - the Arduino GND should be connected via a black wire to the ground rail (vertical rail, blut, marked with '-') on the left side of the board.
-
-3) ledWritePins - this is how the pins are named in the code. These pins connect to the base leg of the TIP120 transistor and are how the Arduino flips the transistors on/off to turn on/off the LEDs. There are 3 yellow wires that should be plugged into the Arduino GPIO 9, 10, and 11 pins. These lead to the base legs of the three transistors.
-
-4) potPins - There are 3 green wires leading from the rotating potentiometer and the sliding potentiometer to the Arduino's analog pins: A0, A1, A2, and A3. The rotating pots are green wires connected to the same horizontal rail on the breadboard as the grey Ctrl wire of the buckpuck (the buckpuck has its wires labeled on the actual device). The sliding pot has a blue wire that plugs into A3.
-
-5) buttons - The start button has a (I think) yellow wire that should be plugged into pin 3. The mode button's yellow wire plugs into pin 4. The button's other terminal is connected to GND via a soldered wire that you don't need to adjust.
-
-6) LCD - The white wire soldered to the SDA pin on the LCD connects to the A4 analog pin on the Arduino. The blue wire soldered to the SCL pin on the LCD connects to the A5 analog pin on the Arduino.
-
-
--- Soldering the LCD --
-
-Reminder: Tin the terminals of the LCD as well as the wires, then just try to heat them together. Add more solder if necessary. Test the connection by moving the wire back and forth and making sure it doesn't pull off from the lcd leg. Heat shrink.
-
-1) Solder a black wire to the GND leg on the LCD. Solder the other end of this wire to the GND rail on the board (vertical blue rail, left side, marked '-')
-
-2) Solder a red wire to the VCC leg on the LCD. Solder the other end of this wire to the 5V power rail on the board (vertical red rail, right side, marked '+' NOTE THIS IS NOT THE SAME SIDE OF THE BOARD AS THE GND RAIL, WHICH RECEIVES 12V- THE LCD NEEDS 5V FROM THE ARDUINO)
-
-3) Solder a white wire to the SDA leg of the LCD. The other end plugs into the A4 pin of the Arduino.
-
-4) Solder a blue wire to the SCL leg of the LCD. The other end plugs into the A5 pin of the Arduino.
-
-
--- Board Layout --
-
-The board everything's soldered to right now is designed to mimic a typical breadboard. So there is a set of two vertical rails on either side of the board- every pin in each vertical rail is connected to each other, the rails themselves are not connected. One rail is marked '+' and is colored red, which is generally used for power. The other rail is marked '-' and colored blue, which is general used for GND.
-
-The interior of the board consists of horizontal rails of 5 pins. Each row of 5 pins is all connected; parallel rows are not connected. Google breadboard connections if that's unclear.
-
-Only one GND rail is used for this board since there are enough connections on a single rail. However, 2 power rails are used- the Arduino, Buckpucks, and fan run off 12 V, but the LCD and sliding pot take 5V, The leftmost power rail receives the 12 V from the power supply, whereas the rightmost power rail receives 5V from the Arduino.
-
-
--- Some potential issues + troublshooting guide --
-
-1) LED constantly on: 2 (or 3) legs of the transistor are shorted together. Find the transistor corresponding to the problem LED. Use the continuity function to determine if any two legs of the transistor are connected (they shouldn't be). If two legs are connected, try to find any messy solder that is creating this connection. Use the wick to remove this.
+PCB files - contains images of PCB layout and schematic in EagleCAD for consecutive design iterations
