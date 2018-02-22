@@ -53,10 +53,10 @@
 LiquidCrystal_I2C lcd(0x3F,20,4);
 
 //led output pins
-int ledWritePins[] = {10,9,11};
-//int ledWritePins[] = {10,11,9};
-int potPins[] = {A1,A0,A2,A3};
-//int potPins[] = {A1,A2,A0,A3};
+//int ledWritePins[] = {10,9,11};
+int ledWritePins[] = {10,11,9};
+//int potPins[] = {A1,A0,A2,A3};
+int potPins[] = {A1,A2,A0,A3};
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
 int cameraPin = 7;
@@ -207,15 +207,12 @@ void shutdown_LED(){
 //write instruction to camera
 void camera_write_trig(){
   //dead time
-  //stop_time = millis() + t_dead;
-//  while(millis() < stop_time){}
   delay(t_dead);
   //take picture
-//  stop_time = millis() + t_exposure;
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delay(t_exposure);
-//  while(millis() < stop_time){}
+  delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(t_exposure - 1);
 
   //switch LED states
   for(int led=0;led<3;led++){
@@ -225,13 +222,15 @@ void camera_write_trig(){
 }
 
 void camera_write_const(){
+  updateLED();
   //dead time
   delay(t_dead);
 
   //take picture
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delay(t_exposure);
+  delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(t_exposure - 1);
 }
 
 #endif

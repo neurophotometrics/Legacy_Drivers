@@ -14,23 +14,30 @@ void setup() {
 
   //initialize all I/O pins
   for(int pin = 0;pin++;pin<3){
-    pinMode(ledWritePins[pin],OUTPUT);
+    //pinMode(ledWritePins[pin],OUTPUT);
     pinMode(potPins[pin],INPUT);
   }
 
+  pinMode(9,OUTPUT);
+  pinMode(10,OUTPUT);
+  pinMode(11,OUTPUT);
+  pinMode(A0,INPUT);
+  pinMode(A1,INPUT);
+  pinMode(A2,INPUT);
+  pinMode(A3,INPUT);
+  
   pinMode(potPins[FPS],INPUT);
   pinMode(cameraPin,OUTPUT);
   
   init_lcd();
-
-  Serial.begin(9600);
+  shutdown_LED();
 }
 
 void loop() {
 
   //check inputs
   updateFPS();    
-  updateLED();
+  //updateLED();
   modeCheck();
   startCheck();
 
