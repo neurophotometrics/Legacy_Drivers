@@ -39,6 +39,7 @@
 #define VAL_CURSOR 10
 #define CONSTANT_MODE 0
 #define TRIGGER_MODE 1
+#define CYCLE_MODE 2
 
 #include <Arduino.h>
 #include <Button.h>
@@ -67,14 +68,15 @@ int on[] = {LOW,LOW,LOW};
 boolean mode = CONSTANT_MODE;
 boolean start = false;
 unsigned long temp;
+int cycle_led = 0;
 
 //technical parameters
 //old potmin = 700, potMax = 852
 int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;
 
 //wave parameters
-int t_exposure;			//CALCULATED AS 1/FPS - t_dead
-int t_dead = 1;			
+int t_exposure;      //CALCULATED AS 1/FPS - t_dead
+int t_dead = 1;     
 unsigned long stop_time;
 
 /*
@@ -92,6 +94,7 @@ void init_LED(int led1,int led2, int led3);
 void shutdown_LED();
 void camera_write_trig();
 void camera_write_const();
+void camera_write_cycle();
 
 /*
  * Begin function definitions.
@@ -169,15 +172,20 @@ void updateLED(){
 //check if in TRIGGER or CONSTANT mode
 void modeCheck(){
   if(modeButton.uniquePress()){
-      mode = !mode;
+      mode = (mode+1)%3;
       lcd.setCursor(16,0);
-      if(mode){
-        lcd.print("TRGR");
+      switch(mode){
+        case TRIGGER_MODE:
+          lcd.print("TRGR");
+          break;
+        case CONSTANT_MODE:
+          lcd.print("CNST");
+          break;
+        case CYCLE_MODE:
+          lcd.print("CYCL");
+          break;
       }
-      else{
-        lcd.print("CNST");
-      }
-    }
+  }
 }
 
 //check if experiment initiated
@@ -231,6 +239,24 @@ void camera_write_const(){
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(t_exposure - 1);
+}
+
+void camera_write_cycle(){
+  //dead time
+  delay(t_dead);
+  //take picture
+  digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(1);
+  digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(t_exposure - 1);
+
+  on[cycle_led] = LOW;
+  cycle_led = (cycle_led + 1)%3;
+  on[cycle_led] = HIGH;
+  //switch LED states
+  for(int led=0;led<3;led++){
+    digitalWrite(ledWritePins[led],on[led]);
+  }
 }
 
 #endif

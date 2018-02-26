@@ -1,5 +1,5 @@
 
-#include "alan1.h"
+#include "alan_trig3.h"
 
 /*
  * Filename: alan1
@@ -50,32 +50,46 @@ void loop() {
   if(start){
     lcd.setCursor(17,3);
     lcd.print("ON ");
-    //TRIGGER MODE
-    if(mode==TRIGGER_MODE){
-      
-      //initialize LED states
-      init_LED(LOW,HIGH,HIGH);  //CHANGE LED TRIGGERING: 410, 470, 560
+    switch(mode){
 
-      //capture data until start button pressed
-      while(start){
-        camera_write_trig();
-        startCheck();
-      }
+      case TRIGGER_MODE:
+      
+        //initialize LED states
+        init_LED(LOW,HIGH,HIGH);  //CHANGE LED TRIGGERING: 410, 470, 560
+  
+        //capture data until start button pressed
+        while(start){
+          camera_write_trig();
+          startCheck();
+        }
+        break;
+        
+      case CONSTANT_MODE:
+
+        //initialize LED states
+        init_LED(HIGH,HIGH,HIGH);
+        
+        //capture data until start button pressed
+        while(start){
+          camera_write_const();
+          startCheck();
+        }
+        break;
+      
+      case CYCLE_MODE:
+
+        //initialize LED states
+        init_LED(LOW,LOW,LOW);
+        
+        //capture data until start button pressed
+        while(start){
+          camera_write_cycle();
+          startCheck();
+        }
+        break;
+
     }
 
-    //CONSTANT MODE
-    else{
-      
-      //initialize LED states
-      init_LED(HIGH,HIGH,HIGH);
-      
-      //capture data until start button pressed
-      while(start){
-        camera_write_const();
-        startCheck();
-      }
-    }
-    
     //turn off LEDs
     shutdown_LED();
     lcd.setCursor(17,3);
@@ -83,7 +97,3 @@ void loop() {
   }
   
 }
-
-
-
-
