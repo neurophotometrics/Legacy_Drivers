@@ -52,14 +52,38 @@ void loop() {
     lcd.print("ON ");
     switch(mode){
 
-      case TRIGGER_MODE:
+      case TRIGGER1_MODE:
       
         //initialize LED states
         init_LED(LOW,HIGH,HIGH);  //CHANGE LED TRIGGERING: 410, 470, 560
   
         //capture data until start button pressed
         while(start){
-          camera_write_trig();
+          camera_write_trig1();
+          startCheck();
+        }
+        break;
+
+      case TRIGGER2_MODE:
+      
+        //initialize LED states
+        init_LED(LOW,HIGH,LOW);  //CHANGE LED TRIGGERING: 410, 470, 560
+  
+        //capture data until start button pressed
+        while(start){
+          camera_write_trig2();
+          startCheck();
+        }
+        break;
+
+      case TRIGGER3_MODE:
+      
+        //initialize LED states
+        init_LED(LOW,LOW,LOW);
+        
+        //capture data until start button pressed
+        while(start){
+          camera_write_trig3();
           startCheck();
         }
         break;
@@ -76,18 +100,6 @@ void loop() {
         }
         break;
       
-      case CYCLE_MODE:
-
-        //initialize LED states
-        init_LED(LOW,LOW,LOW);
-        
-        //capture data until start button pressed
-        while(start){
-          camera_write_cycle();
-          startCheck();
-        }
-        break;
-
     }
 
     //turn off LEDs

@@ -38,8 +38,9 @@
 #define FPS 3
 #define VAL_CURSOR 10
 #define CONSTANT_MODE 0
-#define TRIGGER_MODE 1
-#define CYCLE_MODE 2
+#define TRIGGER1_MODE 1
+#define TRIGGER2_MODE 2
+#define TRIGGER3_MODE 3
 
 #include <Arduino.h>
 #include <Button.h>
@@ -65,13 +66,12 @@ int cameraPin = 7;
 //state variables
 int intensity[] = {-1,-1,-1,-1};
 int on[] = {LOW,LOW,LOW};
-boolean mode = CONSTANT_MODE;
+int mode = CONSTANT_MODE;
 boolean start = false;
 unsigned long temp;
 int cycle_led = 0;
 
 //technical parameters
-//old potmin = 700, potMax = 852
 int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;
 
 //wave parameters
@@ -92,9 +92,10 @@ void modeCheck();
 void startCheck();
 void init_LED(int led1,int led2, int led3);
 void shutdown_LED();
-void camera_write_trig();
+void camera_write_trig1();
+void camera_write_trig2();
+void camera_write_trig3();
 void camera_write_const();
-void camera_write_cycle();
 
 /*
  * Begin function definitions.
@@ -161,7 +162,6 @@ void updateLED(){
     temp = min(temp,potMin);
     temp = max(temp,potMax);
     intensity[led] = map(temp,potMin,potMax,0,maxIntensity);
-    //intensity[led] = abs(map(temp, potMin, potMax, 0, maxIntensity)-maxIntensity);
     if(oldLed != intensity[led]){
       //update LCD
       updateLCD(led);
@@ -175,17 +175,20 @@ void modeCheck(){
       mode = (mode+1)%3;
       lcd.setCursor(16,0);
       switch(mode){
-        case TRIGGER_MODE:
-          lcd.print("TRGR");
-          break;
         case CONSTANT_MODE:
           lcd.print("CNST");
           break;
-        case CYCLE_MODE:
-          lcd.print("CYCL");
+        case TRIGGER1_MODE:
+          lcd.print("TRG1");
+          break;
+        case TRIGGER2_MODE:
+          lcd.print("TRG2");
+          break;
+        case TRIGGER3_MODE:
+          lcd.print("TRG3");
           break;
       }
-  }
+  } 
 }
 
 //check if experiment initiated
@@ -213,7 +216,7 @@ void shutdown_LED(){
 }
 
 //write instruction to camera
-void camera_write_trig(){
+void camera_write_trig1(){
   //dead time
   delay(t_dead);
   //take picture
@@ -229,19 +232,23 @@ void camera_write_trig(){
   }
 }
 
-void camera_write_const(){
-  updateLED();
+void camera_write_trig2(){
   //dead time
   delay(t_dead);
-
   //take picture
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(t_exposure - 1);
+
+  //switch LED states
+  for(int led=1;led<=2;led++){
+    on[led] = !on[led];
+    digitalWrite(ledWritePins[led],on[led]);
+  }
 }
 
-void camera_write_cycle(){
+void camera_write_trig3(){
   //dead time
   delay(t_dead);
   //take picture
@@ -257,6 +264,18 @@ void camera_write_cycle(){
   for(int led=0;led<3;led++){
     digitalWrite(ledWritePins[led],on[led]);
   }
+}
+
+void camera_write_const(){
+  updateLED();
+  //dead time
+  delay(t_dead);
+
+  //take picture
+  digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(1);
+  digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
+  delay(t_exposure - 1);
 }
 
 #endif
