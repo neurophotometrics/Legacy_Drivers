@@ -55,10 +55,12 @@
 LiquidCrystal_I2C lcd(0x3F,20,4);
 
 //led output pins
+/*new board*/
 //int ledWritePins[] = {10,9,11};
+//int potPins[] = {A1,A2,A0,A3};
+/*old board*/
 int ledWritePins[] = {10,11,9};
 int potPins[] = {A1,A0,A2,A3};
-//int potPins[] = {A1,A2,A0,A3};
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
 int cameraPin = 7;
@@ -172,7 +174,7 @@ void updateLED(){
 //check if in TRIGGER or CONSTANT mode
 void modeCheck(){
   if(modeButton.uniquePress()){
-      mode = (mode+1)%3;
+      mode = (mode+1)%4;
       lcd.setCursor(16,0);
       switch(mode){
         case CONSTANT_MODE:
