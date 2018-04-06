@@ -1,7 +1,7 @@
 /*
- * Filename: alan1.h
+ * Filename: alan_trig3.h
  * Author: Christopher Yin
- * Description: Header file containing methods and data fields for alan1.
+ * Description: Header file containing methods and data fields for alan)trig3.
  * Date: 10.24.17
  *
  * Data Fields:
@@ -21,11 +21,19 @@
  *            
  *
  * Methods:
- *            void init_lcd()
- *            void updateLCD(int val)
- *            void updateFPS()
- *            void updateLED()
- *            void updateLCD(int val)
+ *            void init_lcd();
+ *            void updateLCD(int val);
+ *            void updateFPS();
+ *            void updateLED();
+ *            void updateLCD(int val);
+ *            void modeCheck();
+ *            void startCheck();
+ *            void init_LED(int led1,int led2, int led3);
+ *            void shutdown_LED();
+ *            void camera_write_trig1();
+ *            void camera_write_trig2();
+ *            void camera_write_trig3();
+ *            void camera_write_const();
  *
  */
 
@@ -171,7 +179,7 @@ void updateLED(){
   }
 }
 
-//check if in TRIGGER or CONSTANT mode
+//check mode
 void modeCheck(){
   if(modeButton.uniquePress()){
       mode = (mode+1)%4;
@@ -210,6 +218,7 @@ void init_LED(int led1,int led2, int led3){
   }
 }
 
+//turn off all LEDs
 void shutdown_LED(){
   for(int led=0;led<3;led++){
     on[led] = LOW;
@@ -217,7 +226,7 @@ void shutdown_LED(){
   }
 }
 
-//write instruction to camera
+//trigger mode 1 - alternate 410 and 470/560
 void camera_write_trig1(){
   //dead time
   delay(t_dead);
@@ -234,6 +243,7 @@ void camera_write_trig1(){
   }
 }
 
+//trigger mode 2 - alternate 470 and 560
 void camera_write_trig2(){
   //dead time
   delay(t_dead);
@@ -250,6 +260,7 @@ void camera_write_trig2(){
   }
 }
 
+//trigger mode 3 - cycle through all LEDs
 void camera_write_trig3(){
   //dead time
   delay(t_dead);
@@ -268,6 +279,7 @@ void camera_write_trig3(){
   }
 }
 
+//constant mode
 void camera_write_const(){
   updateLED();
   //dead time

@@ -1,8 +1,7 @@
-
 #include "alan_trig3.h"
 
 /*
- * Filename: alan1
+ * Filename: alan_trig3
  * Author: Christopher Yin
  * Description:
  * User interface for Neurophotometrics
@@ -18,6 +17,7 @@ void setup() {
     pinMode(potPins[pin],INPUT);
   }
 
+  //individually initialize output pins- error when in loop (FIXME)
   pinMode(9,OUTPUT);
   pinMode(10,OUTPUT);
   pinMode(11,OUTPUT);
@@ -35,15 +35,13 @@ void setup() {
 }
 
 void loop() {
-  shutdown_LED();
-
   //check inputs
-  updateFPS();    
   //updateLED();
+  updateFPS();    
   modeCheck();
   startCheck();
 
-  //write camera high
+  //write camera high (triggered by falling edge)
   digitalWrite(cameraPin,HIGH);
 
   //start capturing data if startButton is pressed
@@ -55,7 +53,7 @@ void loop() {
       case TRIGGER1_MODE:
       
         //initialize LED states
-        init_LED(LOW,HIGH,HIGH);  //CHANGE LED TRIGGERING: 410, 470, 560
+        init_LED(LOW,HIGH,HIGH);
   
         //capture data until start button pressed
         while(start){
@@ -67,7 +65,7 @@ void loop() {
       case TRIGGER2_MODE:
       
         //initialize LED states
-        init_LED(LOW,HIGH,LOW);  //CHANGE LED TRIGGERING: 410, 470, 560
+        init_LED(LOW,HIGH,LOW);
   
         //capture data until start button pressed
         while(start){
@@ -103,9 +101,9 @@ void loop() {
     }
 
     //turn off LEDs
-    shutdown_LED();
     lcd.setCursor(17,3);
     lcd.print("OFF");
   }
-  
+  //turn off all LEDs
+  shutdown_LED();
 }
