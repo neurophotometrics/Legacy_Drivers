@@ -64,11 +64,11 @@ LiquidCrystal_I2C lcd(0x3F,20,4);
 
 //led output pins
 /*new board*/
-int ledWritePins[] = {10,9,11};
-int potPins[] = {A1,A2,A0,A3};
+//int ledWritePins[] = {10,9,11};
+//int potPins[] = {A1,A2,A0,A3};
 /*old board*/
-//int ledWritePins[] = {10,11,9};
-//int potPins[] = {A1,A0,A2,A3};
+int ledWritePins[] = {10,11,9};
+int potPins[] = {A1,A0,A2,A3};
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
 int cameraPin = 7;
@@ -87,7 +87,6 @@ int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;
 //wave parameters
 int t_exposure;      //CALCULATED AS 1/FPS - t_dead
 int t_dead = 1;     
-unsigned long stop_time;
 
 /*
  * Begin forward declaration of functions.
