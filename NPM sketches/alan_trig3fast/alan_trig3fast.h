@@ -82,10 +82,11 @@ unsigned long temp;
 int cycle_led = 0;
 
 //technical parameters
-int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;
+int minFPS = 5, maxFPS = 160, maxIntensity = 100, potMin = 830, potMax = 315;
 
 //wave parameters
-unsigned long t_exposure;      //CALCULATED AS 1/FPS - t_dead
+unsigned long t_exposure_m;	//millisecon component, CALCULATED AS 1/FPS - t_dead
+unsigned long t_exposure_u;	//microsecond component
 unsigned long t_dead = 250ul;     
 
 /*
@@ -157,8 +158,8 @@ void updateFPS(){
   if(oldFPS != intensity[FPS]){
     updateLCD(FPS);
     //update exposure time
-    t_exposure = 1000000/intensity[FPS] - t_dead - 1000ul;
-    Serial.println(t_exposure);
+    t_exposure_m = (1000000/intensity[FPS] - t_dead - 1000ul) / 1000;
+    t_exposure_u = (1000000/intensity[FPS] - t_dead - 1000ul) % 1000;
   }
   
 }
@@ -231,14 +232,12 @@ void shutdown_LED(){
 void camera_write_trig1(){
   //dead time
   delayMicroseconds(t_dead);
-  Serial.println(t_dead);
   //take picture
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
-  Serial.println("1000");
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delayMicroseconds(t_exposure);
-  Serial.println(t_exposure);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 
   //switch LED states
   for(int led=0;led<3;led++){
@@ -255,7 +254,8 @@ void camera_write_trig2(){
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delayMicroseconds(t_exposure);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 
   //switch LED states
   for(int led=1;led<=2;led++){
@@ -272,7 +272,8 @@ void camera_write_trig3(){
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delayMicroseconds(t_exposure);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 
   on[cycle_led] = LOW;
   cycle_led = (cycle_led + 1)%3;
@@ -293,7 +294,8 @@ void camera_write_const(){
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delayMicroseconds(t_exposure);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 }
 
 #endif
