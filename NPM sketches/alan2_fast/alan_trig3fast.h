@@ -1,5 +1,5 @@
 /*
- * Filename: alan_dpot.h
+ * Filename: alan_trig3fast.h
  * Author: Christopher Yin
  * Description: Header file containing methods and data fields for alan)trig3.
  * Date: 10.24.17
@@ -64,11 +64,11 @@ LiquidCrystal_I2C lcd(0x3F,20,4);
 
 //led output pins
 /*new board*/
-//int ledWritePins[] = {10,9,11};
-//int potPins[] = {A1,A2,A0,A3};
+int ledWritePins[] = {10,9,11};
+int potPins[] = {A1,A2,A0,A3};
 /*old board*/
-int ledWritePins[] = {10,11,9};
-int potPins[] = {A1,A0,A2,A3};
+//int ledWritePins[] = {10,11,9};
+//int potPins[] = {A1,A0,A2,A3};
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
 int cameraPin = 7;
@@ -82,12 +82,12 @@ unsigned long temp;
 int cycle_led = 0;
 
 //technical parameters
-int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;
+int minFPS = 5, maxFPS = 160, maxIntensity = 100, potMin = 830, potMax = 315;
 
 //wave parameters
-int t_exposure;      //CALCULATED AS 1/FPS - t_dead
-int t_dead = 1;     
-unsigned long stop_time;
+unsigned long t_exposure_m;	//millisecon component, CALCULATED AS 1/FPS - t_dead
+unsigned long t_exposure_u;	//microsecond component
+unsigned long t_dead = 250ul;     
 
 /*
  * Begin forward declaration of functions.
@@ -158,8 +158,10 @@ void updateFPS(){
   if(oldFPS != intensity[FPS]){
     updateLCD(FPS);
     //update exposure time
-    t_exposure = 1000/intensity[FPS] - t_dead;
+    t_exposure_m = (1000000/intensity[FPS] - t_dead - 1000ul) / 1000;
+    t_exposure_u = (1000000/intensity[FPS] - t_dead - 1000ul) % 1000;
   }
+  
 }
 
 //change led intensity + update LCD
@@ -229,12 +231,13 @@ void shutdown_LED(){
 //trigger mode 1 - alternate 410 and 470/560
 void camera_write_trig1(){
   //dead time
-  delay(t_dead);
+  delayMicroseconds(t_dead);
   //take picture
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delay(t_exposure - 1);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 
   //switch LED states
   for(int led=0;led<3;led++){
@@ -246,12 +249,13 @@ void camera_write_trig1(){
 //trigger mode 2 - alternate 470 and 560
 void camera_write_trig2(){
   //dead time
-  delay(t_dead);
+  delayMicroseconds(t_dead);
   //take picture
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delay(t_exposure - 1);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 
   //switch LED states
   for(int led=1;led<=2;led++){
@@ -263,12 +267,13 @@ void camera_write_trig2(){
 //trigger mode 3 - cycle through all LEDs
 void camera_write_trig3(){
   //dead time
-  delay(t_dead);
+  delayMicroseconds(t_dead);
   //take picture
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delay(t_exposure - 1);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 
   on[cycle_led] = LOW;
   cycle_led = (cycle_led + 1)%3;
@@ -283,13 +288,15 @@ void camera_write_trig3(){
 void camera_write_const(){
   updateLED();
   //dead time
-  delay(t_dead);
+  delayMicroseconds(250);
 
   //take picture
   digitalWrite(cameraPin,LOW); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
   delay(1);
   digitalWrite(cameraPin,HIGH); //CHANGE POLARITY HERE -- LOW2HIGH or HIGH2LOW
-  delay(t_exposure - 1);
+  delay(t_exposure_m);
+  delayMicroseconds(t_exposure_u);
 }
 
 #endif
+

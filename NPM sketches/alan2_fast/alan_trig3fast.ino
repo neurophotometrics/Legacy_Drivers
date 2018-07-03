@@ -1,7 +1,7 @@
-#include "alan_dpot.h"
+#include "alan_trig3fast.h"
 
 /*
- * Filename: alan_trig3
+ * Filename: alan_trig3fast
  * Author: Christopher Yin
  * Description:
  * User interface for Neurophotometrics
@@ -107,3 +107,4 @@ void loop() {
   //turn off all LEDs
   shutdown_LED();
 }
+
