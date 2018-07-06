@@ -1,3 +1,5 @@
+
+
 /*
  * Filename: alan_trig3.h
  * Author: Christopher Yin
@@ -51,6 +53,7 @@
 #define TRIGGER3_MODE 3
 
 #include <Arduino.h>
+#include <SPI.h>
 #include <Button.h>
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
@@ -66,6 +69,10 @@ LiquidCrystal_I2C lcd(0x3F,20,4);
 int ledWritePins[] = {7,8,9};
 //pot read pins
 int potPins[] = {A2,A1,A0,A3};
+//digipot select pin
+int selectPin = 10;
+//digitpot pot address bytes
+int potChannel[] = {1,3,2};
 
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
@@ -77,6 +84,7 @@ int on[] = {LOW,LOW,LOW};
 int mode = CONSTANT_MODE;
 boolean start = false;
 unsigned long temp;
+int potval;
 int cycle_led = 0;
 
 //technical parameters
@@ -94,6 +102,7 @@ void init_lcd();
 void updateLCD(int val);
 void updateFPS();
 void updateLED();
+void dPotWrite(int pot, int potval);
 void updateLCD(int val);
 void modeCheck();
 void startCheck();
@@ -166,14 +175,24 @@ void updateLED(){
     
     //update stored led intensity
     temp = analogRead(potPins[led]);
-    temp = min(temp,potMin);
-    temp = max(temp,potMax);
-    intensity[led] = map(temp,potMin,potMax,0,maxIntensity);
+    intensity[led] = map(temp,0,1023,0,maxIntensity);
+    potval = map( temp,0,1023,0,127);
+    dPotWrite(potChannel[led],potval);
     if(oldLed != intensity[led]){
       //update LCD
       updateLCD(led);
     }
   }
+}
+
+//write new val to dpot
+void dPotWrite(int channel, int potval){
+  digitalWrite(selectPin,LOW);
+  //delay(1);
+  SPI.transfer(channel);
+  SPI.transfer(potval);
+  //delay(1);
+  digitalWrite(selectPin,HIGH);
 }
 
 //check mode
@@ -200,7 +219,7 @@ void modeCheck(){
 
 //check if experiment initiated
 void startCheck(){
-  start = !startButton.isPressed();
+  start = startButton.isPressed();
 }
 
 

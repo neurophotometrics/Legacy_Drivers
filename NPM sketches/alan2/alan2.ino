@@ -18,25 +18,26 @@ void setup() {
   }
 
   //individually initialize output pins- error when in loop (FIXME)
+  pinMode(7,OUTPUT);
+  pinMode(8,OUTPUT);
   pinMode(9,OUTPUT);
-  pinMode(10,OUTPUT);
-  pinMode(11,OUTPUT);
   pinMode(A0,INPUT);
   pinMode(A1,INPUT);
   pinMode(A2,INPUT);
   pinMode(A3,INPUT);
   
-  pinMode(potPins[FPS],INPUT);
   pinMode(cameraPin,OUTPUT);
+  pinMode(selectPin,OUTPUT);
+  SPI.begin();
+  SPI.setBitOrder(MSBFIRST);
   
   init_lcd();
   shutdown_LED();
-  Serial.begin(9600);
 }
 
 void loop() {
   //check inputs
-  //updateLED();
+  updateLED();
   updateFPS();    
   modeCheck();
   startCheck();
