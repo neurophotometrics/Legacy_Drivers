@@ -72,7 +72,7 @@ int potPins[] = {A2,A1,A0,A3};
 //digipot select pin
 int selectPin = 10;
 //digitpot pot address bytes
-int potChannel[] = {1,3,2};
+int potChannel[] = {0,2,1};
 
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
@@ -175,8 +175,8 @@ void updateLED(){
     
     //update stored led intensity
     temp = analogRead(potPins[led]);
-    intensity[led] = map(temp,0,1023,0,maxIntensity);
-    potval = map( temp,0,1023,0,127);
+    intensity[led] = map(temp,0,1023,0,100);
+    potval = map( temp,0,1023,6,90);
     dPotWrite(potChannel[led],potval);
     if(oldLed != intensity[led]){
       //update LCD

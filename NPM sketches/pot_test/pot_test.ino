@@ -12,39 +12,36 @@ int potPins[] = {A2,A1,A0,A3};
 //digipot select pin
 int selectPin = 10;
 //digitpot pot address bytes
-int potChannel[] = {1,3,2};
+int potChannel[] = {0,2,1};
 int potval, temp;
 int intensity[] = {-1,-1,-1,-1};
+int val = 70 ;
 
-byte ad1 = 001;
-byte ad2 = 010;
-byte ad3 = 011;
+
 
 void updateLED();
 void dPotWrite(int channel, int potval);
 
 
-//int select = 10;
-//byte command = 0x11;
-//int potval = 0;
-//int potPin = A0;
 
 void setup() {
   pinMode(selectPin,OUTPUT); digitalWrite(selectPin,HIGH);
   pinMode(7,OUTPUT); digitalWrite(7,HIGH);
   pinMode(8,OUTPUT); digitalWrite(8,HIGH);
   pinMode(9,OUTPUT); digitalWrite(9,HIGH);
-  
-  
+  pinMode(A0,INPUT);
   SPI.begin();
-  SPI.setBitOrder(MSBFIRST);
+  Serial.begin(9600);
 }
 
 void loop() {
-  dPotWrite(ad1,128);
-  dPotWrite(ad2,128);
-  dPotWrite(ad3,128);
-  delay(1000);
+//  unsigned long t = 5000 + millis();
+//  while(millis() < t){
+//    updateLED();
+//  }
+//  t = 2000 + millis();
+//  while(millis() < t){digitalWrite(7,LOW);}
+//  digitalWrite(7,HIGH);
 }
 
 //change led intensity + update LCD
@@ -55,19 +52,18 @@ void updateLED(){
     //update stored led intensity
     temp = analogRead(potPins[led]);
     intensity[led] = map(temp,0,1023,0,100);
-    potval = map( temp,0,1023,0,127);
+    potval = map( temp,0,1023,6,90);
     dPotWrite(potChannel[led],potval);
-    Serial.println("Channel: " + led);
-    Serial.println(temp);
-    Serial.println(potval);
   }
 }
 
 //write new val to dpot
 void dPotWrite(int channel, int potval){
   digitalWrite(selectPin,LOW);
+  delay(10);
   SPI.transfer(channel);
   SPI.transfer(potval);
+  delay(10);
   digitalWrite(selectPin,HIGH);
 }
 
