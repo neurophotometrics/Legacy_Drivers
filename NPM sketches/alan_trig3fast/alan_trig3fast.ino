@@ -31,13 +31,18 @@ void setup() {
   
   init_lcd();
   shutdown_LED();
-  Serial.begin(9600);
+  
+  /*
+  ******************************************************************************** HARDCODE DESIRED FPS HERE
+  */
+  intensity[FPS] = 160;
+  updateLCD(FPS);
 }
 
 void loop() {
   //check inputs
   //updateLED();
-  updateFPS();    
+  //updateFPS();    
   modeCheck();
   startCheck();
 
