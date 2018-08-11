@@ -113,7 +113,7 @@ void camera_write_trig1();
 void camera_write_trig2();
 void camera_write_trig3();
 void camera_write_const();
-void dPotWrite(int channel, int potval)
+void dPotWrite(int channel, int potval);
 
 /*
  * Begin function definitions.
