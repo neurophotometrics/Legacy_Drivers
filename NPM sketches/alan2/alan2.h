@@ -42,9 +42,9 @@
 #define ALAN2
 
 // define constants for addressing purposes
-#define LED410 0
+#define LED410 2
 #define LED470 1
-#define LED560 2
+#define LED560 0
 #define FPS 3
 #define VAL_CURSOR 10
 #define CONSTANT_MODE 0
@@ -66,14 +66,10 @@
 
 LiquidCrystal_I2C lcd(0x3F,20,4);
 
-//led output pins
-int ledWritePins[] = {7,8,9};
-//pot read pins
-int potPins[] = {A2,A1,A0,A3};
-//digipot select pin
-int selectPin = 10;
-//digitpot pot address bytes
-int potChannel[] = {0,2,1};
+int ledWritePins[] = {7,8,9};   //led output pins
+int potPins[] = {A2,A1,A0,A3};  //pot read pins
+int selectPin = 10;             //digipot select pin
+int potChannel[] = {0,2,1};     //digitpot pot address bytes
 
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
@@ -84,9 +80,9 @@ int intensity[] = {-1,-1,-1,-1};
 int on[] = {LOW,LOW,LOW};
 int mode = CONSTANT_MODE;
 boolean start = false;
-unsigned long temp; //used in LED
-int potval;
-int cycle_led = 0;
+int potval;         //used in updateLED()
+unsigned long temp; //used in updateLED()
+int cycle_led = 0;  //used in trigger3 mode
 
 //technical parameters
 int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;

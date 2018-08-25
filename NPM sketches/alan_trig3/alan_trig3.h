@@ -60,15 +60,15 @@
  */
  
 
-LiquidCrystal_I2C lcd(0x3F,20,4);
+LiquidCrystal_I2C lcd(0x27,20,4);
 
 //led output pins
 /*new board*/
-int ledWritePins[] = {10,9,11};
-int potPins[] = {A1,A2,A0,A3};
+//int ledWritePins[] = {10,9,11};
+//int potPins[] = {A1,A2,A0,A3};
 /*old board*/
-//int ledWritePins[] = {10,11,9};
-//int potPins[] = {A1,A0,A2,A3};
+int ledWritePins[] = {10,11,9};
+int potPins[] = {A1,A0,A2,A3};
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
 int cameraPin = 7;
