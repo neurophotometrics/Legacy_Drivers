@@ -1,15 +1,25 @@
 Arduino Code for Neurophotometrics Fiber Photometry System. Enables user interface and operation of device. More information about Neurophotometrics at https://www.neurophotometrics.com/.
 
-NPM sketches
+File Organization:
 
-	- alan1.ino - main sketch for running NPM fiber photometry system
+/Libraries - contains Arduino libraries for button and LCD
 
-	- alan1.h - header file for main sketch
+	/Button.zip - library for interfacing Arduino with buttons
 
-Libraries - contains necessary libraries for button and LCD
+	/LiquidCrystal_I2C2004V2.zip - library for interfacing Arduino with LCD through I2C pins
 
-	Button.zip - open source library for interfacing Arduino with buttons
+	/NPM_LCD.zip - library for LCD model to be used in later versions of the driver box
 
-	LiquidCrystal_I2C2004V2.zip - open source library for interfacing Arduino with LCD through I2C pins
+/NPM sketches - contains main code for running driver box
 
-PCB files - contains images of PCB layout and schematic in EagleCAD for consecutive design iterations
+	/Deprecated code - Outdated versions of the driver box software
+
+	/alan2 - code used with current systems up to 40fps
+
+	/alan2_fast - code for higher speed camera up to 160fps
+
+	/alan2.1 - uses NPM_LCD.zip library
+
+	/alan_trig3 - code used with older shield model of the PCB up to 40fps
+
+	/alan_trig3fast - code used with older shield model of the PCB up to 160fps
