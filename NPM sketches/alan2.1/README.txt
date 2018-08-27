@@ -1,1 +1,0 @@
-alan2 code implementing new NPM_LCD library

@@ -1,7 +1,7 @@
 /*
- * Filename: alan_trig3fast.h
+ * Filename: npm_driver2.0_160fps.h
  * Author: Christopher Yin
- * Description: Header file containing methods and data fields for alan)trig3.
+ * Description: Header file containing methods and data fields for npm_driver2.0_160fps.ino.
  * Date: 10.24.17
  *
  * Data Fields:

@@ -1,9 +1,7 @@
-
-
 /*
- * Filename: alan2.h
+ * Filename: npm_driver2.0.h
  * Author: Christopher Yin
- * Description: Header file containing methods and data fields for alan2.
+ * Description: Header file containing methods and data fields for npm_driver2.0.
  * Date: 10.24.17
  *
  * Data Fields:
@@ -44,9 +42,9 @@
 #define ALAN2
 
 // define constants for addressing purposes
-#define LED410 0
+#define LED410 2
 #define LED470 1
-#define LED560 2
+#define LED560 0
 #define FPS 3
 #define VAL_CURSOR 10
 #define CONSTANT_MODE 0
@@ -58,22 +56,20 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <Button.h>
-#include <NPM_LCD.h>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+
 /*
  * Begin data field declarations
  */
  
 
-NPM_LCD lcd(0x28,20,4);
+LiquidCrystal_I2C lcd(0x3F,20,4);
 
-//led output pins
-int ledWritePins[] = {7,8,9};
-//pot read pins
-int potPins[] = {A2,A1,A0,A3};
-//digipot select pin
-int selectPin = 10;
-//digitpot pot address bytes
-int potChannel[] = {0,2,1};
+int ledWritePins[] = {7,8,9};   //led output pins
+int potPins[] = {A2,A1,A0,A3};  //pot read pins
+int selectPin = 10;             //digipot select pin
+int potChannel[] = {0,2,1};     //digitpot pot address bytes
 
 Button startButton = Button(3,PULLUP);
 Button modeButton = Button(4,PULLUP);
@@ -84,9 +80,9 @@ int intensity[] = {-1,-1,-1,-1};
 int on[] = {LOW,LOW,LOW};
 int mode = CONSTANT_MODE;
 boolean start = false;
-unsigned long temp; //used in LED
-int potval;
-int cycle_led = 0;
+int potval;         //used in updateLED()
+unsigned long temp; //used in updateLED()
+int cycle_led = 0;  //used in trigger3 mode
 
 //technical parameters
 int minFPS = 5, maxFPS = 40, maxIntensity = 100, potMin = 830, potMax = 315;
@@ -133,6 +129,7 @@ void dPotWrite(int channel, int potval);
  */
 void init_lcd(){
   lcd.init();
+  lcd.backlight();
   lcd.setCursor(0,LED410);
   lcd.print("LED410: ");
   lcd.setCursor(0,LED470);
@@ -169,12 +166,12 @@ void init_lcd(){
  */
 void updateLCD(int val){
   // set cursor to appropriate line
-  lcd.setCursor(VAL_CURSOR,val);
-  lcd.print("     ");
+  (lcd).setCursor(VAL_CURSOR,val);
+  (lcd).print("     ");
 
-  lcd.setCursor(VAL_CURSOR,val);
+  (lcd).setCursor(VAL_CURSOR,val);
   // print updated value
-  lcd.print(String(intensity[val]));
+  (lcd).print(intensity[val]);
 }
 
 /*
@@ -196,7 +193,6 @@ void updateFPS(){
 
   //update FPS value
   intensity[FPS] = abs(map(analogRead(potPins[FPS]),0,1023,minFPS,maxFPS)-(minFPS+maxFPS));
-  delay(50);
   //update LCD
   if(oldFPS != intensity[FPS]){
     updateLCD(FPS);
@@ -225,7 +221,7 @@ void updateLED(){
     intensity[led] = map(temp,0,1023,0,100);
     potval = map( temp,0,1023,6,90);
     dPotWrite(potChannel[led],potval);
-    if(abs(oldLed - intensity[led]) > 1){
+    if(oldLed != intensity[led]){
       //update LCD
       updateLCD(led);
     }

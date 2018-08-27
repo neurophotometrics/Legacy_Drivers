@@ -1,7 +1,7 @@
 /*
- * Filename: alan_trig3.h
+ * Filename: npm_driver1.0.h
  * Author: Christopher Yin
- * Description: Header file containing methods and data fields for alan)trig3.
+ * Description: Header file containing methods and data fields for npm_driver1.0.
  * Date: 10.24.17
  *
  * Data Fields:

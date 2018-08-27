@@ -1,7 +1,7 @@
-#include "alan2.1.h"
+#include "npm_driver2.1.h"
 
 /*
- * Filename: alan2
+ * Filename: npm_driver2.1
  * Author: Christopher Yin
  * Description:
  * User interface for Neurophotometrics

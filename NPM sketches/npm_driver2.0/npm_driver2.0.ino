@@ -1,7 +1,7 @@
-#include "alan_trig3fast.h"
+#include "npm_driver2.0.h"
 
 /*
- * Filename: alan_trig3fast
+ * Filename: npm_driver2.0.ino
  * Author: Christopher Yin
  * Description:
  * User interface for Neurophotometrics
@@ -11,32 +11,43 @@
 
 void setup() {
 
-  //initialize all I/O pins
+  /*
+   * initialize all I/O pins
+   */
   for(int pin = 0;pin++;pin<3){
     //pinMode(ledWritePins[pin],OUTPUT);
     pinMode(potPins[pin],INPUT);
   }
 
-  //individually initialize output pins- error when in loop (FIXME)
+  /*
+   * individually initialize output pins
+   * error when initialized in loop
+   */
+  pinMode(7,OUTPUT);
+  pinMode(8,OUTPUT);
   pinMode(9,OUTPUT);
-  pinMode(10,OUTPUT);
-  pinMode(11,OUTPUT);
   pinMode(A0,INPUT);
   pinMode(A1,INPUT);
   pinMode(A2,INPUT);
   pinMode(A3,INPUT);
   
-  pinMode(potPins[FPS],INPUT);
   pinMode(cameraPin,OUTPUT);
-  
+  pinMode(selectPin,OUTPUT);
+
+  // initialize SPI communication with digipot
+  SPI.begin();
+  SPI.setBitOrder(MSBFIRST);
+
+  // initialize LCD screen
   init_lcd();
-  shutdown_LED();
-  Serial.begin(9600);
 }
 
 void loop() {
-  //check inputs
-  //updateLED();
+  
+  /*
+   * check LED intensity, frame rate, mode, and if protocol started
+   */
+  updateLED();
   updateFPS();    
   modeCheck();
   startCheck();
@@ -44,10 +55,18 @@ void loop() {
   //write camera high (triggered by falling edge)
   digitalWrite(cameraPin,HIGH);
 
-  //start capturing data if startButton is pressed
+  /*
+   * if start switch is pressed, start protocol
+   */
   if(start){
+
+    //write "ON" to LCD
     lcd.setCursor(17,3);
     lcd.print("ON ");
+
+    /*
+     * execute protocol based on value of 'mode'
+     */
     switch(mode){
 
       case TRIGGER1_MODE:
@@ -100,7 +119,7 @@ void loop() {
       
     }
 
-    //turn off LEDs
+    //write "OFF" to LCD
     lcd.setCursor(17,3);
     lcd.print("OFF");
   }

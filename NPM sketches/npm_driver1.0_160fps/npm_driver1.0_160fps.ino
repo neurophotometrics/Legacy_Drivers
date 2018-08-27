@@ -1,7 +1,7 @@
-#include "alan_trig3.h"
+#include "npm_driver1.0_160fps.h"
 
 /*
- * Filename: alan_trig3
+ * Filename: npm_driver1.0_160fps
  * Author: Christopher Yin
  * Description:
  * User interface for Neurophotometrics
@@ -31,13 +31,18 @@ void setup() {
   
   init_lcd();
   shutdown_LED();
-  Serial.begin(9600);
+  
+  /*
+  ******************************************************************************** HARDCODE DESIRED FPS HERE
+  */
+  intensity[FPS] = 160;
+  updateLCD(FPS);
 }
 
 void loop() {
   //check inputs
   //updateLED();
-  updateFPS();    
+  //updateFPS();    
   modeCheck();
   startCheck();
 
