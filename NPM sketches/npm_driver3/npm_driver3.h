@@ -1,7 +1,7 @@
 /*
- * Filename: npm_driver2.0.h
+ * Filename: npm_driver3.h
  * Author: Christopher Yin
- * Description: Header file containing methods and data fields for npm_driver2.0.
+ * Description: Header file containing methods and data fields for npm_driver3.
  * Date: 10.24.17
  *
  * Data Fields:
@@ -38,13 +38,13 @@
  *
  */
 
-#ifndef ALAN2
-#define ALAN2
+#ifndef npm_driver3
+#define npm_driver3
 
 // define constants for addressing purposes
-#define LED410 2
+#define LED410 0
 #define LED470 1
-#define LED560 0
+#define LED560 2
 #define FPS 3
 #define VAL_CURSOR 10
 #define CONSTANT_MODE 0
@@ -64,7 +64,7 @@
  */
  
 
-LiquidCrystal_I2C lcd(0x3F,20,4);
+LiquidCrystal_I2C lcd(0x27,20,4);
 
 int ledWritePins[] = {7,8,9};   //led output pins
 int potPins[] = {A2,A1,A0,A3};  //pot read pins
@@ -76,7 +76,7 @@ Button modeButton = Button(4,PULLUP);
 int cameraPin = 5;
 
 //state variables
-int intensity[] = {-1,-1,-1,-1};
+float intensity[] = {-1,-1,-1,-1};
 int on[] = {LOW,LOW,LOW};
 int mode = CONSTANT_MODE;
 boolean start = false;
@@ -95,12 +95,12 @@ int t_dead = 1;
  * Begin forward declaration of functions.
  */
 
+//void setHigh();
 void init_lcd();
 void updateLCD(int val);
 void updateFPS();
 void updateLED();
 void dPotWrite(int pot, int potval);
-void updateLCD(int val);
 void modeCheck();
 void startCheck();
 void init_LED(int led1,int led2, int led3);
@@ -131,7 +131,7 @@ void init_lcd(){
   lcd.init();
   lcd.backlight();
   lcd.setCursor(0,LED410);
-  lcd.print("LED410: ");
+  lcd.print("LED415: ");
   lcd.setCursor(0,LED470);
   lcd.print("LED470: ");
   lcd.setCursor(0,LED560);
@@ -171,7 +171,16 @@ void updateLCD(int val){
 
   (lcd).setCursor(VAL_CURSOR,val);
   // print updated value
-  (lcd).print(intensity[val]);
+
+  if (intensity[val] == 100){
+    (lcd).print(100);
+  }
+  else if ((intensity[val] > 9) && (intensity[val] < 100)){
+    (lcd).print(intensity[val],1);
+  }
+  else {
+    (lcd).print(intensity[val],2);
+  }
 }
 
 /*
@@ -214,12 +223,32 @@ void updateFPS(){
  */
 void updateLED(){
   for(int led=0;led<3;led++){
-    int oldLed = intensity[led];
+    float oldLed = intensity[led];
     
     //update stored led intensity
     temp = analogRead(potPins[led]);
-    intensity[led] = map(temp,0,1023,0,100);
-    potval = map( temp,0,1023,6,90);
+
+    float subPercent = 0.50; // i want to spend x percent between 0 and 1. default to 1
+    //float superPercent = 1 - subPercent; // i spend the rest of my time 1 and 99
+    float subThresh = 1023 * subPercent;
+    float subScale = 1 / subThresh;
+    float value = 0;
+    int potval = 0;
+    int potMin = 0;
+    int potMax = 90;
+    int potThresh = (potMin + potMax) * subPercent;
+    if (temp < subThresh){
+      value = ((float) temp) * subScale;
+      potval = map(temp,0,subThresh,potMin,potThresh);
+    }
+    else {
+      value = map(temp,subThresh,1023,1,100);
+      potval = map(temp,subThresh,1023,potThresh,potMax);
+    }
+     
+    intensity[led] = value;//map(temp,0,1023,0,100);
+    //potval = map(temp,0,1023,6,90);
+     
     dPotWrite(potChannel[led],potval);
     if(oldLed != intensity[led]){
       //update LCD
@@ -440,4 +469,3 @@ void camera_write_const(){
 }
 
 #endif
-

@@ -1,5 +1,5 @@
 /*
- * Filename: npm_driver1.0.h
+ * Filename: npm_driver1.h
  * Author: Christopher Yin
  * Description: Header file containing methods and data fields for npm_driver1.0.
  * Date: 10.24.17
@@ -37,8 +37,8 @@
  *
  */
 
-#ifndef ALAN1
-#define ALAN1
+#ifndef npm_driver1
+#define npm_driver1
 
 #define LED410 0
 #define LED470 1
